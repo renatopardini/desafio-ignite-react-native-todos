@@ -10,6 +10,12 @@ export function Home() {
 
   function handleAddTask(newTaskTitle: string) {
     //TODO - add new task
+    let task: Task = {
+      id: new Date().getTime(),
+      title: newTaskTitle,
+      done: false
+    }
+    setTasks([...tasks, task]);
   }
 
   function handleToggleTaskDone(id: number) {
