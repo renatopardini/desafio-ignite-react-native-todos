@@ -5,6 +5,11 @@ import { Header } from '../components/Header';
 import { Task, TasksList } from '../components/TasksList';
 import { TodoInput } from '../components/TodoInput';
 
+export interface IEditTask {
+  taskId: number;
+  taskNewTitle: string;
+}
+
 export function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
 
@@ -22,8 +27,6 @@ export function Home() {
       }
       setTasks([...tasks, task]);
     }
-    
-    
   }
 
   function handleToggleTaskDone(id: number) {
@@ -38,10 +41,35 @@ export function Home() {
 
   function handleRemoveTask(id: number) {
     //TODO - remove task from state
-    let filteredTasks = tasks.filter((filtered) => {
-      return filtered.id != id;
-    });
-    setTasks(filteredTasks);
+    Alert.alert(
+      "Tem certeza que você deseja remover esse item?",
+      '',
+      [
+        {
+          text: "Sim",
+          onPress: () => {
+            let filteredTasks = tasks.filter((filtered) => {
+              return filtered.id != id;
+            });
+            setTasks(filteredTasks);
+          }
+        },
+        {
+          text: "Não",
+          style: "cancel"
+        }
+      ]
+    );
+  }
+
+  function handleEditTask(params: IEditTask) {
+    const { taskId, taskNewTitle } = params;
+
+    const updatedTasks = tasks.map((task) => ({...task}));
+    var indexTask = tasks.findIndex((task) => task.id === taskId);
+    updatedTasks[indexTask].title = taskNewTitle;
+
+    setTasks(updatedTasks);
   }
 
   return (
@@ -54,6 +82,7 @@ export function Home() {
         tasks={tasks} 
         toggleTaskDone={handleToggleTaskDone}
         removeTask={handleRemoveTask} 
+        editTask={handleEditTask}
       />
     </View>
   )
